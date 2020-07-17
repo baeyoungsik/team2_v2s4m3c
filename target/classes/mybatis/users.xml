@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace = "dev.mvc.users.UsersDAOInter">
+
+  <select id="checkID" resultType="int" parameterType="String">
+    SELECT COUNT(userID) as cnt
+    FROM users
+    WHERE userID= #{userID}
+  </select>
+
+  <insert id="create" parameterType="UsersVO"> <!-- insert한 레코드 갯수 return -->
+    INSERT INTO users(userno, userID, userpw, user_name, nickname, user_identify, user_identify2, user_tel, user_tel2, user_tel3, 
+                              user_email, user_email2, user_zipcode, user_address1, user_address2, word, user_date)
+    VALUES (users_seq.nextval, #{userID}, #{userpw}, #{user_name}, #{nickname}, #{user_identify}, #{user_identify2}, #{user_tel},#{user_tel2},#{user_tel3},
+     #{user_email}, #{user_email2}, #{user_zipcode}, #{user_address1}, #{user_address2}, #{word}, sysdate)
+  </insert>
+  
+   <select id="list" resultType="UsersVO" >
+    SELECT userno, userID, userpw, user_name, nickname, user_identify, user_identify2, user_tel,user_tel2,user_tel3, user_email,
+           user_email2, user_zipcode, user_address1, user_address2, user_point, coupon, word, user_date
+    FROM users
+    ORDER BY userno ASC
+   </select>
+   
+   <select id="read" resultType="UsersVO" parameterType="int">
+    SELECT userno, userID, userpw, user_name, nickname, user_identify, user_identify2, user_tel,user_tel2,user_tel3, user_email,
+           user_email2, user_zipcode, user_address1, user_address2, user_point, coupon, word, user_date
+    FROM users
+    WHERE userno = #{userno}
+   </select>  
+   
+   <update id="update" parameterType="UsersVO">
+    UPDATE users 
+    SET user_name=#{user_name}, nickname=#{nickname}, user_tel=#{user_tel}, user_tel2=#{user_tel2}, user_tel3=#{user_tel3},user_email=#{user_email}, user_email2=#{user_email2}, 
+    user_zipcode=#{user_zipcode}, user_address1=#{user_address1},  user_address2=#{user_address2}
+    WHERE userno=#{userno}
+   </update>  
+
+   <delete id="delete" parameterType="int">  <!-- 삭제된 레코드 갯수 return -->
+      DELETE FROM users
+      WHERE userno = #{userno}
+   </delete>      
+  
+  <select id="passwd_check" parameterType="HashMap" resultType="int">  <!-- 두개 입력 memberVO 보다 hashmap이 편함 -->
+    SELECT COUNT(userno) as cnt
+    FROM users
+    WHERE userno=#{userno} AND userpw=#{userpw}
+  </select>  
+  
+   <update id="passwd_update" parameterType="HashMap"> <!-- 수정된 레코드 갯수 return-->
+    UPDATE users
+    SET userpw=#{userpw}
+    WHERE userno=#{userno}
+   </update>
+   
+     <!-- 카테고리별 검색 레코드 갯수 -->
+   <select id="search_count" resultType="int" parameterType="HashMap">
+     SELECT COUNT(*) as cnt
+     FROM users
+     <choose>
+       <when test="word == null or word == ''">
+         WHERE userno=#{userno}
+       </when>
+       <otherwise>
+         WHERE userno=#{userno} AND (nickname LIKE '%' || #{word} || '%'
+                                                     OR user_name LIKE '%' || #{word} || '%'
+                                                     OR word LIKE '%' || #{word} || '%')
+       </otherwise>
+     </choose>
+   </select>   
+   
+      <!-- 닉네임 검색 목록 + 페이징 -->
+   <select id="list_by_userno_search" resultType="UsersVO" parameterType="HashMap">
+     SELECT userno, userID, userpw, user_name, nickname, user_identify, user_identify2, user_tel, user_tel2, user_tel3, user_email,
+           user_email2, user_zipcode, user_address1, user_address2, user_point, coupon, word, user_date, r
+     FROM (
+               SELECT userno, userID, userpw, user_name, nickname, user_identify, user_identify2, user_tel, user_tel2, user_tel3, user_email,
+               user_email2, user_zipcode, user_address1, user_address2, user_point, coupon, word, user_date, rownum as r              
+               FROM (
+                         SELECT userno, userID, userpw, user_name, nickname, user_identify, user_identify2, user_tel,user_tel2,user_tel3, user_email,
+                         user_email2, user_zipcode, user_address1, user_address2, user_point, coupon, word, user_date
+                         FROM users
+     <choose>
+       <when test="word == null or word == ''"> <!-- 검색하지 않는 경우  -->
+         WHERE userno =#{userno}
+       </when>
+       <otherwise>
+         WHERE userno=#{userno} AND (nickname LIKE '%' || #{word} || '%'
+                                                     OR user_name LIKE '%' || #{word} || '%'
+                                                     OR word LIKE '%' || #{word} || '%')
+       </otherwise>
+     </choose>
+     ORDER BY userno asc
+         )
+     )
+     
+     WHERE <![CDATA[ r >= #{startNum} AND r <= #{endNum} ]]>
+   </select>  
+   
+  <select id="login" resultType="int" parameterType="Map"> <!-- map = hashmap -->
+    SELECT COUNT(userno) as cnt
+    FROM users
+    WHERE userID=#{userID} AND userpw=#{userpw}
+  </select>
+   
+  <select id="readByid" resultType="UsersVO" parameterType="String">
+    SELECT userno, userID, userpw, user_name, nickname, user_identify, user_identify2, user_tel,user_tel2,user_tel3, user_email,
+           user_email2, user_zipcode, user_address1, user_address2, user_point, coupon, word, user_date
+    FROM users
+    WHERE userID = #{userID }
+  </select>
+
+</mapper> 

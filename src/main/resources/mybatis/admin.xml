@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace = "dev.mvc.admin.AdminDAOInter">
+
+  <select id="checkID" resultType="int" parameterType="String">
+    SELECT COUNT(adminID) as cnt
+    FROM admin
+    WHERE adminID= #{adminID}
+  </select>
+
+
+  <insert id="create" parameterType="AdminVO"> <!-- insert한 레코드 갯수 return -->
+    INSERT INTO admin(adminno, adminID, adminpw, admin_name, admin_tel, admin_tel2, admin_tel3, 
+                                  admin_email, admin_email2, admin_role, admin_power, admin_date)
+    VALUES (admin_seq.nextval, #{adminID}, #{adminpw}, #{admin_name}, #{admin_tel}, #{admin_tel2}, #{admin_tel3},
+     #{admin_email}, #{admin_email2}, #{admin_role}, #{admin_power}, sysdate)
+  </insert>
+  
+   <select id="list" resultType="AdminVO" >
+      SELECT adminno, adminID, adminpw, admin_name, admin_tel, admin_tel2, admin_tel3, admin_email, admin_email2, 
+              admin_role, admin_power, admin_date
+      FROM admin
+      ORDER BY adminno ASC
+   </select> 
+
+   <select id="read" resultType="AdminVO" parameterType="int">
+    SELECT adminno, adminID, adminpw, admin_name, admin_tel, admin_tel2, admin_tel3, admin_email, admin_email2, 
+            admin_role, admin_power, admin_date
+    FROM admin
+    WHERE adminno = #{adminno}
+   </select> 
+   
+   <update id="update" parameterType="AdminVO">
+    UPDATE admin 
+    SET admin_name=#{admin_name}, admin_tel=#{admin_tel}, admin_tel2=#{admin_tel2}, admin_tel3=#{admin_tel3}, 
+          admin_email=#{admin_email}, admin_email2=#{admin_email2}, admin_role=#{admin_role}, admin_power=#{admin_power}
+    WHERE adminno = #{adminno}
+   </update>     
+   
+   <delete id="delete" parameterType="int">  <!-- 삭제된 레코드 갯수 return -->
+      DELETE FROM admin
+      WHERE adminno = #{adminno}
+   </delete>        
+  
+  <select id="passwd_check" parameterType="HashMap" resultType="int">  <!-- 두개 입력 memberVO 보다 hashmap이 편함 -->
+    SELECT COUNT(adminno) as cnt
+    FROM admin
+    WHERE adminno=#{adminno} AND adminpw=#{adminpw}
+  </select>  
+  
+   <update id="passwd_update" parameterType="HashMap"> <!-- 수정된 레코드 갯수 return-->
+    UPDATE admin
+    SET adminpw=#{adminpw}
+    WHERE adminno=#{adminno}
+   </update> 
+    
+  <select id="login1" resultType="int" parameterType="Map"> <!-- map = hashmap -->
+    SELECT COUNT(adminno) as cnt
+    FROM admin
+    WHERE adminID=#{adminID} AND adminpw=#{adminpw}
+  </select>
+   
+  <select id="readByid" resultType="AdminVO" parameterType="String">
+      SELECT adminno, adminID, adminpw, admin_name, admin_tel, admin_tel2, admin_tel3, admin_email, admin_email2, 
+              admin_role, admin_power, admin_date
+    FROM admin
+    WHERE adminID = #{adminID }
+  </select>
+   
+
+</mapper> 
