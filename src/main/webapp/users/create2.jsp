@@ -25,6 +25,25 @@ $(function() { // 자동 실행
   $('#btn_send').on('click', send); 
 });
 
+
+//이메일 도메인 선택
+$("#selectEmailDomain").change(function() {
+  var selectEmailDomain = $("#selectEmailDomain").val();
+  if(selectEmailDomain == "otherDomains") {
+    $("#emailDomain").val("");
+    $("#selectEmailDomain").hide();
+    $("#emailDomain").show();
+  } else {
+    $("#emailDomain").val(selectEmailDomain);
+  }
+  $("#emailDomain").change();
+});
+
+//이메일 도메인 변경
+$("#emailDomain").change(function() {
+  $("#email").blur();
+});
+
 function formCheck(obj){ 
   // null 검사
    if(!obj.user_identify.value || obj.user_identify.value.trim().length==0){
@@ -200,9 +219,10 @@ function checkID() {
     </div>
   </div> <!-- Modal 알림창 종료 -->
   
+<div class="wrap_create">
 
     <div class= "header_create">  
-       <H2 style='text-align: center;'><span class="logo" >회원가입</span></H2>
+      <H1><span class="login_logo" >회원 가입</span></H1> 
    </div>
    
   <FORM id='join_form' method='POST' action='./create.do' >
@@ -215,7 +235,7 @@ function checkID() {
         <div class="join_row">
            <h3 class="join_title"><label for="userID">아이디</label></h3>
                 <span class="ps_box int_id">                  
-                   <input type="text" id="userID" name="userID"  class="int" title="ID" required="required" autofocus="autofocus">               
+                   <input type="text" id="userID" name="userID"  class="int" title="ID" required="required" placeholder="아이디" autofocus="autofocus">               
                 </span>
                               
         <button type='button' id="btn_checkID" class="btn btn-info" >중복확인</button>  
@@ -227,87 +247,81 @@ function checkID() {
      
      <div class="join_row">
         <h3 class="join_title"><label for="userpw">비밀번호</label></h3>
-        <span class="ps_box int_pass" id="userpw">
-           <input type="password" id="userpw" name="userpw" class="int" title="비밀번호 입력" aria-describedby="pswd1Msg" maxlength="20">
+        <span class="ps_box int_id" id="userpw">
+           <input type="password" id="userpw" name="userpw" class="int" title="비밀번호 입력" placeholder="비밀번호"maxlength="20">
                <span class="lbl"><span id="pswd1Span" class="step_txt"></span></span>
         </span>
               <span class="error_next_box" id="pswd1Msg" style="display:none" aria-live="assertive">5~12자의 영문 소문자, 숫자와 특수기호(_)만 사용 가능합니다.</span>
 
-            <h3 class="join_title"><label for="pswd2">비밀번호 재확인</label></h3>
-               <span class="ps_box int_pass_check" id="pswd2Img">
-              <input type="password" id="userpw2" name="userpw2" class="int" title="비밀번호 재확인 입력" aria-describedby="pswd2Blind" maxlength="20">
-              <span id="pswd2Blind" class="wa_blind">설정하려는 비밀번호가 맞는지 확인하기 위해 다시 입력 해주세요.</span>
+            <h3 class="join_title"><label for="userpw2">비밀번호 재확인</label></h3>
+               <span class="ps_box int_id" id="userpw2">
+              <input type="password" id="userpw2" name="userpw2" class="int" placeholder="비밀번호 재확인" title="비밀번호 재확인 입력"  maxlength="20">
+              
             </span>
+            <span id="pswd2Blind" class="wa_blind">설정하려는 비밀번호가 맞는지 확인하기 위해 다시 입력 해주세요.</span>
                         <span class="error_next_box" id="pswd2Msg" style="" aria-live="assertive">필수 정보입니다.</span>
-     </div>
+       </div>
                 
-    <div class="form-group">
-      <label for="userpw" class="col-md-2 control-label" style='font-size: 0.9em;'>패스워드<span class='text-danger'>*</span></label>    
-      <div class="col-md-10">
-        <input type='password' class="form-control" name='userpw' id='userpw' value='' required="required" style='width: 30%;' placeholder="패스워드">
-      </div>
-    </div>   
+      <div class='row_group'>
+        <div class="join_row">
+           <h3 class="join_title"><label for="user_name">이름</label></h3>
+                <span class="ps_box int_id">                  
+                   <input type="text" id="user_name" name="user_name" placeholder="이름"  class="int" title="이름" required="required" >               
+                </span>               
+       </div>   
+    </div>
 
-    <div class="form-group">
-      <label for="userpw2" class="col-md-2 control-label" style='font-size: 0.9em;'>패스워드 확인<span class='text-danger'>*</span></label>    
-      <div class="col-md-10">
-        <input type='password' class="form-control" name='userpw2' id='userpw2' value='' required="required" style='width: 30%;' placeholder="패스워드">
-      </div>
-    </div>   
     
-    <div class="form-group">
-      <label for="user_name" class="col-md-4 control-label" style='font-size: 0.9em;'>성명<span class='text-danger'>*</span></label>    
-      <div class="col-md-8">
-        <input type='text' class="form-control" name='user_name' id='user_name' 
-                   value='' required="required" style='width: 30%;' placeholder="성명">
-      </div>
+      <div class='row_group'>
+        <div class="join_row">
+           <h3 class="join_title"><label for="nickname">별명</label></h3>
+                <span class="ps_box int_id">                  
+                   <input type="text" id="nickname" name="nickname" placeholder="닉네임"  class="int" title="닉네임" required="required" >               
+                </span>               
+       </div>       
     </div>
-    
-    
-    
-     <div class="form-group">
-      <label for="nickname" class="col-md-4 control-label" style='font-size: 0.9em;'>닉네임<span class='text-danger'>*</span></label>    
-      <div class="col-md-8">
-        <input type='text' class="form-control" name='nickname' id='nickname' 
-                   value='' required="required" style='width: 30%;' placeholder="Nickname">
-      </div>
-    </div>   
-    
  
-        <div class="form-group" >
-      <label for="user_identify" class="col-md-2 control-label" style='font-size: 0.9em;'>주민등록번호<span class='text-danger'>*</span></label>    
-        <div class="form-inline">
-      <div class="col-md-10" >
-            <input type="text"  name="user_identify" id="user_identify" class='form-control' style='width: 15%; text-align: center;' minlength='6' maxlength="6" placeholder="YYMMDD" >&nbsp;─</input>
-            <input type="password"  name="user_identify2" id="user_identify2" class='form-control' style='width: 15%; ' minlength='7' maxlength="7"  ></input>
-            예) 123456-1234567        
-        </div>     
-      </div>
-    </div>
+       <div class='row_group'>
+        <div class="join_row">
+           <h3 class="join_title"><label for="user_identify">주민등록번호</label></h3>
+            <div class="form-inline" >                  
+                   <input type="text" name="user_identify" id="user_identify"  class='form-control' style='text-align: center;' title="주민등록번호" required="required" minlength='6' maxlength="6" placeholder="******" >&nbsp;─&nbsp;</input>               
+                   <input type="password"  name="user_identify2" id="user_identify2" class='form-control'  minlength='7' maxlength="7"  ></input> 
+                </div>              
+       </div>     
    
+       <div class='row_group'>
+        <div class="join_row">
+           <h3 class="join_title"><label for="user_email">이메일</label></h3>
+            <div class="form-inline" >                  
+                   <input type='text'  name='user_email' id='user_email' 
+                   value='' required="required" class='form-control'  placeholder="email">&nbsp;@&nbsp;</input>
+               <select id="user_email2" name="emailSelection" class='form-control'> 
+                  <option value="1" selected="selected"  >도메인 선택</option>
+                  <option value="naver.com">naver.com</option>
+                  <option value="hanmail.net">hanmail.net</option>
+                  <option value="daum.net">daum.net</option>
+                  <option value="nate.com">nate.com</option>
+                  <option value="gmail.com">gmail.com</option>
+                  <option value="hotmail.com">hotmail.com</option>
+                  <option value="lycos.co.kr">lycos.co.kr</option>
+                  <option value="empal.com">empal.com</option>
+                  <option value="cyworld.com">cyworld.com</option>
+                  <option value="yahoo.com">yahoo.com</option>
+                  <option value="paran.com">paran.com</option>
+                  <option value="dreamwiz.com">dreamwiz.com</option>
+                  <option value="otherDomains" boxview="true">직접 입력</option>
+               </select>    
+               <input type="email2" id="user_email2" name="emailSelection" class="emailInput" value="" style="display: none"/>
+            </div>              
+       </div>   
+       
+      
 
-    <div class="form-group">
-      <label for="user_email" class="col-md-2 control-label" style='font-size: 0.9em;'>이메일<span class='text-danger'>*</span></label>    
-        <div class="form-inline">
-      <div class="col-md-10">    
-        <input type='text'  name='user_email' id='user_email' 
-                   value='' required="required" class='form-control' style='width: 20%;' placeholder="email">&nbsp;@</input>
-        <input type='text'  name='user_email2' id='user_email2' 
-                   value='' required="required" class='form-control' style='width: 20%;' placeholder=""/>
-    <select id="emailSelection" name="emailSelection" class='form-control'>
-      <option value="1" selected="selected"  >직접입력</option>
-      <option value="naver.com">naver.com</option>      
-      <option value="gmail.com">gmail.com</option>
-      <option value="daum.net">daum.net</option>      
-      <option value="hanmail.net">hanmail.net</option>
-    </select>
-        </div>                    
-      </div>
-    </div>
- 
-    
+        
+        
       <div class="form-group">
-      <label class="col-md-2 control-label" >전화번호<span class='text-danger'>*</span></label>
+      <label class="col-md-2 control-label" >전화번호(인증넣어서 다시하기)<span class='text-danger'>*</span></label>
       <div class="form-inline">
         <div class="col-md-10">
         <input type='text' name='user_tel' value='' required="required"  class='form-control'  style='width: 15%;' minlength='3' maxlength='4'>   
@@ -418,14 +432,18 @@ function checkID() {
       </div>
     </div>
     
-    <div class="form-group">
-      <div class="col-md-offset-2 col-md-10">
-        <button type="button" id='btn_send' class="btn btn-primary btn-md">가입</button>
-        <button type="button" onclick="location.href='../index.jsp'" class="btn btn-primary btn-md">취소</button>
 
-      </div>
-    </div>   
+    <div class="form-group">
+        <button type="button" id='btn_send'  class="btn_create">가입완료</button>
+       <!--  <button type="button" onclick="location.href='../index.jsp'" class="btn btn-primary btn-md">취소</button> -->
+   </div>
+  </div>
+  </div>
+
     
+    </div>
+    </div>
+    </div>
     </div>
     </div>
   </FORM>
@@ -474,5 +492,6 @@ function checkID() {
       }
     });
   </script>
+  
 </body>
 </html>
